@@ -25,7 +25,14 @@ async def process_description(message: Message, state: FSMContext):
 
 @router.message(RequestForm.location)
 async def process_location(message: Message, state: FSMContext):
-    await state.update_data(location=message.text)
+    if message.location:
+        # Если геометка
+        location_text = f"{message.location.latitude}, {message.location.longitude}"
+    else:
+        # Если текст (например, адрес)
+        location_text = message.text or "Не указано"
+
+    await state.update_data(location=location_text)
     await state.set_state(RequestForm.media)
     await message.answer("📷 Прикрепите фото или видео (один файл)")
 
