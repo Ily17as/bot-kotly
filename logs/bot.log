@@ -1,0 +1,346 @@
+2025-04-12 14:35:52,268 - __main__ - INFO - Бот запущен и подключен к SQLite базе данных.
+2025-04-12 14:35:52,269 - aiogram.dispatcher - INFO - Start polling
+2025-04-12 14:35:52,520 - aiogram.dispatcher - INFO - Run polling for bot @Kotelok16bot id=7419013518 - 'Котелок'
+2025-04-12 14:35:52,639 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+2025-04-12 14:35:52,639 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7419013518)
+2025-04-12 14:35:56,722 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+2025-04-12 14:35:56,723 - aiogram.dispatcher - WARNING - Sleep for 1.260638 seconds and try again... (tryings = 1, bot id = 7419013518)
+2025-04-12 14:35:58,093 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+2025-04-12 14:35:58,093 - aiogram.dispatcher - WARNING - Sleep for 1.662277 seconds and try again... (tryings = 2, bot id = 7419013518)
+2025-04-12 14:36:02,836 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+2025-04-12 14:36:02,836 - aiogram.dispatcher - WARNING - Sleep for 2.089158 seconds and try again... (tryings = 3, bot id = 7419013518)
+2025-04-12 14:36:04,995 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+2025-04-12 14:36:04,996 - aiogram.dispatcher - WARNING - Sleep for 2.591779 seconds and try again... (tryings = 4, bot id = 7419013518)
+2025-04-12 14:36:10,671 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+2025-04-12 14:36:10,671 - aiogram.dispatcher - WARNING - Sleep for 3.308600 seconds and try again... (tryings = 5, bot id = 7419013518)
+2025-04-12 14:36:14,056 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+2025-04-12 14:36:14,056 - aiogram.dispatcher - WARNING - Sleep for 4.290541 seconds and try again... (tryings = 6, bot id = 7419013518)
+2025-04-12 14:36:18,429 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+2025-04-12 14:36:18,430 - aiogram.dispatcher - WARNING - Sleep for 4.936135 seconds and try again... (tryings = 7, bot id = 7419013518)
+2025-04-12 14:36:23,443 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+2025-04-12 14:36:23,444 - aiogram.dispatcher - WARNING - Sleep for 5.060693 seconds and try again... (tryings = 8, bot id = 7419013518)
+2025-04-12 14:36:28,586 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+2025-04-12 14:36:28,586 - aiogram.dispatcher - WARNING - Sleep for 5.105955 seconds and try again... (tryings = 9, bot id = 7419013518)
+2025-04-12 14:36:33,768 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+2025-04-12 14:36:33,768 - aiogram.dispatcher - WARNING - Sleep for 5.049756 seconds and try again... (tryings = 10, bot id = 7419013518)
+2025-04-12 14:36:38,896 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+2025-04-12 14:36:38,896 - aiogram.dispatcher - WARNING - Sleep for 4.804800 seconds and try again... (tryings = 11, bot id = 7419013518)
+2025-04-12 14:36:43,778 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+2025-04-12 14:36:43,778 - aiogram.dispatcher - WARNING - Sleep for 4.784859 seconds and try again... (tryings = 12, bot id = 7419013518)
+2025-04-12 14:36:45,149 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-12 14:36:45,401 - aiogram.dispatcher - INFO - Polling stopped for bot @Kotelok16bot id=7419013518 - 'Котелок'
+2025-04-12 14:53:07,613 - __main__ - INFO - Бот запущен и подключен к SQLite базе данных.
+2025-04-12 14:53:07,613 - aiogram.dispatcher - INFO - Start polling
+2025-04-12 14:53:20,454 - aiogram.dispatcher - INFO - Run polling for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 14:53:52,598 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-12 14:53:52,862 - aiogram.dispatcher - INFO - Polling stopped for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 14:55:49,840 - __main__ - INFO - Бот запущен и подключен к SQLite базе данных.
+2025-04-12 14:55:49,841 - aiogram.dispatcher - INFO - Start polling
+2025-04-12 14:55:50,096 - aiogram.dispatcher - INFO - Run polling for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 14:55:50,454 - aiogram.event - INFO - Update id=367969366 is handled. Duration 273 ms by bot id=8140069533
+2025-04-12 14:57:35,060 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-12 14:57:35,311 - aiogram.dispatcher - INFO - Polling stopped for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 14:58:17,124 - __main__ - INFO - Бот запущен и подключен к SQLite базе данных.
+2025-04-12 14:58:17,125 - aiogram.dispatcher - INFO - Start polling
+2025-04-12 14:58:17,335 - aiogram.dispatcher - INFO - Run polling for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 14:58:17,654 - aiogram.event - INFO - Update id=367969367 is handled. Duration 237 ms by bot id=8140069533
+2025-04-12 14:59:06,199 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-12 14:59:06,473 - aiogram.dispatcher - INFO - Polling stopped for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 14:59:17,590 - __main__ - INFO - Бот запущен и подключен к SQLite базе данных.
+2025-04-12 14:59:17,592 - aiogram.dispatcher - INFO - Start polling
+2025-04-12 14:59:17,810 - aiogram.dispatcher - INFO - Run polling for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 14:59:18,219 - aiogram.event - INFO - Update id=367969368 is handled. Duration 314 ms by bot id=8140069533
+2025-04-12 14:59:20,653 - aiogram.event - INFO - Update id=367969369 is handled. Duration 176 ms by bot id=8140069533
+2025-04-12 14:59:26,155 - aiogram.event - INFO - Update id=367969370 is handled. Duration 124 ms by bot id=8140069533
+2025-04-12 14:59:33,903 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-12 14:59:34,161 - aiogram.dispatcher - INFO - Polling stopped for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 15:08:13,492 - __main__ - INFO - Бот запущен и подключен к SQLite базе данных.
+2025-04-12 15:08:13,494 - aiogram.dispatcher - INFO - Start polling
+2025-04-12 15:08:13,742 - aiogram.dispatcher - INFO - Run polling for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 15:08:18,186 - aiogram.event - INFO - Update id=367969371 is handled. Duration 245 ms by bot id=8140069533
+2025-04-12 15:08:24,163 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-12 15:08:24,419 - aiogram.dispatcher - INFO - Polling stopped for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 15:09:05,788 - __main__ - INFO - Бот запущен и подключен к SQLite базе данных.
+2025-04-12 15:09:05,788 - aiogram.dispatcher - INFO - Start polling
+2025-04-12 15:09:06,014 - aiogram.dispatcher - INFO - Run polling for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 15:09:06,097 - aiogram.event - INFO - Update id=367969372 is not handled. Duration 0 ms by bot id=8140069533
+2025-04-12 15:09:40,147 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-12 15:09:40,411 - aiogram.dispatcher - INFO - Polling stopped for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 15:10:08,402 - __main__ - INFO - Бот запущен и подключен к SQLite базе данных.
+2025-04-12 15:10:08,404 - aiogram.dispatcher - INFO - Start polling
+2025-04-12 15:10:08,645 - aiogram.dispatcher - INFO - Run polling for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 15:10:09,017 - aiogram.event - INFO - Update id=367969373 is handled. Duration 294 ms by bot id=8140069533
+2025-04-12 15:13:15,116 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-12 15:13:15,371 - aiogram.dispatcher - INFO - Polling stopped for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 15:13:21,554 - __main__ - INFO - Бот запущен и подключен к SQLite базе данных.
+2025-04-12 15:13:21,556 - aiogram.dispatcher - INFO - Start polling
+2025-04-12 15:13:21,794 - aiogram.dispatcher - INFO - Run polling for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 15:13:22,157 - aiogram.event - INFO - Update id=367969374 is handled. Duration 270 ms by bot id=8140069533
+2025-04-12 15:13:23,920 - aiogram.event - INFO - Update id=367969375 is handled. Duration 90 ms by bot id=8140069533
+2025-04-12 15:13:30,261 - aiogram.event - INFO - Update id=367969376 is handled. Duration 112 ms by bot id=8140069533
+2025-04-12 15:13:39,547 - aiogram.event - INFO - Update id=367969377 is handled. Duration 121 ms by bot id=8140069533
+2025-04-12 15:13:49,774 - aiogram.event - INFO - Update id=367969378 is not handled. Duration 3 ms by bot id=8140069533
+2025-04-12 15:13:49,775 - aiogram.event - ERROR - Cause exception while process update id=367969378 by bot id=8140069533
+OperationalError: no such table: requests
+Traceback (most recent call last):
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\handlers\client_requests.py", line 44, in process_media
+    await save_request(user_id, description, location, media_id, media_type)
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\models.py", line 7, in save_request
+    await db.execute(
+    ...<5 lines>...
+    )
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiosqlite\core.py", line 183, in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiosqlite\core.py", line 122, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiosqlite\core.py", line 105, in run
+    result = function()
+sqlite3.OperationalError: no such table: requests
+2025-04-12 15:13:58,687 - aiogram.event - INFO - Update id=367969379 is not handled. Duration 2 ms by bot id=8140069533
+2025-04-12 15:13:58,687 - aiogram.event - ERROR - Cause exception while process update id=367969379 by bot id=8140069533
+OperationalError: no such table: requests
+Traceback (most recent call last):
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\handlers\client_requests.py", line 50, in list_requests
+    requests = await get_user_requests(message.from_user.id)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\models.py", line 20, in get_user_requests
+    async with db.execute(
+               ~~~~~~~~~~^
+        "SELECT * FROM requests WHERE user_id = ? ORDER BY created_at DESC",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        (user_id,)
+        ^^^^^^^^^^
+    ) as cursor:
+    ^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiosqlite\context.py", line 41, in __aenter__
+    self._obj = await self._coro
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiosqlite\core.py", line 183, in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiosqlite\core.py", line 122, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiosqlite\core.py", line 105, in run
+    result = function()
+sqlite3.OperationalError: no such table: requests
+2025-04-12 15:15:01,330 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-12 15:15:01,587 - aiogram.dispatcher - INFO - Polling stopped for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 15:16:27,620 - __main__ - INFO - Бот запущен и подключен к SQLite базе данных.
+2025-04-12 15:16:27,622 - aiogram.dispatcher - INFO - Start polling
+2025-04-12 15:16:27,833 - aiogram.dispatcher - INFO - Run polling for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-12 15:16:29,438 - aiogram.event - INFO - Update id=367969380 is handled. Duration 313 ms by bot id=8140069533
+2025-04-12 15:16:30,787 - aiogram.event - INFO - Update id=367969381 is handled. Duration 88 ms by bot id=8140069533
+2025-04-12 15:16:35,540 - aiogram.event - INFO - Update id=367969382 is handled. Duration 93 ms by bot id=8140069533
+2025-04-12 15:16:41,004 - aiogram.event - INFO - Update id=367969383 is handled. Duration 95 ms by bot id=8140069533
+2025-04-12 15:16:45,881 - aiogram.event - INFO - Update id=367969384 is not handled. Duration 2 ms by bot id=8140069533
+2025-04-12 15:16:45,881 - aiogram.event - ERROR - Cause exception while process update id=367969384 by bot id=8140069533
+OperationalError: no such table: requests
+Traceback (most recent call last):
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 174, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\handlers\client_requests.py", line 44, in process_media
+    await save_request(user_id, description, location, media_id, media_type)
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\models.py", line 7, in save_request
+    await db.execute(
+    ...<5 lines>...
+    )
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiosqlite\core.py", line 183, in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiosqlite\core.py", line 122, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\Admin\Desktop\Код\Питон\bot-kotly\.venv\Lib\site-packages\aiosqlite\core.py", line 105, in run
+    result = function()
+sqlite3.OperationalError: no such table: requests
+2025-04-12 15:18:11,996 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-12 15:18:12,254 - aiogram.dispatcher - INFO - Polling stopped for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-22 18:18:50,260 - app.bot - INFO - Бот запущен и подключен к SQLite базе данных.
+2025-04-22 18:18:50,263 - aiogram.dispatcher - INFO - Start polling
+2025-04-22 18:18:50,331 - aiogram.dispatcher - INFO - Run polling for bot @Kotelok16bot id=8140069533 - 'Kotelok'
+2025-04-22 18:19:22,379 - aiogram.event - INFO - Update id=367969385 is handled. Duration 338 ms by bot id=8140069533
+2025-04-22 18:19:30,333 - aiogram.event - INFO - Update id=367969386 is handled. Duration 84 ms by bot id=8140069533
+2025-04-22 18:19:36,720 - aiogram.event - INFO - Update id=367969387 is handled. Duration 178 ms by bot id=8140069533
+2025-04-22 18:19:47,742 - aiogram.event - INFO - Update id=367969388 is handled. Duration 210 ms by bot id=8140069533
+2025-04-22 18:21:58,366 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-22 18:21:58,393 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 1] [SSL: APPLICATION_DATA_AFTER_CLOSE_NOTIFY] application data after close notify (_ssl.c:2775)
+2025-04-22 18:21:58,393 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8140069533)
+2025-04-22 18:21:58,624 - aiogram.dispatcher - INFO - Polling stopped for bot @Kotelok16bot id=8140069533 - 'Kotelok'
