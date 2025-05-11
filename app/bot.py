@@ -1,29 +1,42 @@
-import logging
 import asyncio
-import os
+import logging
+
 from aiogram import Bot, Dispatcher, Router
 from aiogram.enums import ParseMode
 from aiogram.filters import Command
-from app.config import BOT_TOKEN
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, Message
+
+from app.config import BOT_TOKEN, MASTER_BOT_TOKEN
 from app.database.database import init_db
 from app.database.models import add_user, list_users
-from app.handlers.client_requests import router as request_router
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, Message
+from app.handlers.client_requests import router as client_router
+from app.handlers.master import router as master_router
 from app.middlewares.error_handler import ErrorHandlerMiddleware
 from app.utils.logger import setup_logger
+from aiogram.client.bot import DefaultBotProperties
 
-logger = logging.getLogger(__name__)
+# — общий логгер
 setup_logger()
+logger = logging.getLogger(__name__)
 
-# Инициализация бота и диспетчера
-bot = Bot(token=BOT_TOKEN)
-bot.parse_mode = ParseMode.HTML
+# === Клиентский бот ===
+user_bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+user_dp = Dispatcher()
+user_dp.include_router(client_router)
+user_dp.message.middleware(ErrorHandlerMiddleware())
 
-dp = Dispatcher()
+# === Мастер-бот ===
+master_bot = Bot(token=MASTER_BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+master_dp = Dispatcher()
+master_dp.include_router(master_router)
+master_dp.message.middleware(ErrorHandlerMiddleware())
+
+# Экспорт, чтобы client_requests.py мог шлать мастерам
+__all__ = ["user_bot", "master_bot"]
+
+# /start для клиента
 main_router = Router()
-dp.include_router(main_router)
-dp.include_router(request_router)  # FSM-заявки
-dp.message.middleware(ErrorHandlerMiddleware())
+main_router.message.filter(Command("start"))
 
 # Команда /start
 @main_router.message(Command("start"))
@@ -61,20 +74,22 @@ async def start_handler(message: Message):
     )
 
 
-# Тестовая команда для вывода пользователей в консоль
+user_dp.include_router(main_router)
+
+# Отладка пользователей
 async def debug_users():
     users = await list_users()
     for u in users:
         print(f"ID: {u[0]}, Username: {u[1]}")
 
-# Основной запуск
+# Запуск обоих ботов
 async def main():
     await init_db()
-    await bot.delete_webhook(drop_pending_updates=True)  # Удаляем webhook
-    logger.info("Бот запущен и подключен к SQLite базе данных.")
-    await debug_users()
-    await dp.start_polling(bot)
-
+    logger.info("✅ База инициализирована; запускаем оба бота")
+    await asyncio.gather(
+        user_dp.start_polling(user_bot, drop_pending_updates=True),
+        master_dp.start_polling(master_bot, drop_pending_updates=True),
+    )
 
 if __name__ == "__main__":
     asyncio.run(main())

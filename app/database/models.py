@@ -75,3 +75,64 @@ async def deactivate_master(telegram_id: int):
     )
     await db.commit()
     await db.close()
+
+
+async def list_available_masters():
+    db = await get_db()
+    async with db.execute(
+        "SELECT telegram_id FROM masters "
+        "WHERE is_active=1 AND active_orders<2 AND has_debt=0"
+    ) as cursor:
+        rows = await cursor.fetchall()
+    await db.close()
+    return [r[0] for r in rows]
+
+async def take_request(request_id: int, master_id: int):
+    db = await get_db()
+    # пометить заявку «в работе»
+    await db.execute(
+        "UPDATE requests SET status='in_progress', master_id=? "
+        "WHERE id=? AND status='open'",
+        (master_id, request_id)
+    )
+    # увеличить счётчик активных заказов мастера
+    await db.execute(
+        "UPDATE masters SET active_orders=active_orders+1 "
+        "WHERE telegram_id=?",
+        (master_id,)
+    )
+    await db.commit()
+    await db.close()
+
+async def decline_request(request_id: int, master_id: int):
+    db = await get_db()
+    await db.execute(
+        "UPDATE requests SET status='open', master_id=NULL "
+        "WHERE id=? AND master_id=?",
+        (request_id, master_id)
+    )
+    await db.commit()
+    await db.close()
+
+async def complete_request(request_id: int, master_id: int):
+    db = await get_db()
+    await db.execute(
+        "UPDATE requests SET status='done' WHERE id=? AND master_id=?",
+        (request_id, master_id)
+    )
+    await db.execute(
+        "UPDATE masters SET active_orders=active_orders-1, has_debt=1 "
+        "WHERE telegram_id=?",
+        (master_id,)
+    )
+    await db.commit()
+    await db.close()
+
+async def pay_commission(master_id: int):
+    db = await get_db()
+    await db.execute(
+        "UPDATE masters SET has_debt=0 WHERE telegram_id=?",
+        (master_id,)
+    )
+    await db.commit()
+    await db.close()

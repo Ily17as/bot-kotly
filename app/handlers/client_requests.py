@@ -4,6 +4,9 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from app.database.models import save_request, get_user_requests
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from app.database.models import list_available_masters
+from app.handlers.master import make_request_kb
+from app.database.database import get_db
 
 router = Router()
 
@@ -47,29 +50,61 @@ async def process_media(message: Message, state: FSMContext):
 async def process_location(message: Message, state: FSMContext):
     data = await state.get_data()
     user_id = message.from_user.id
+
+    # формируем контакт: либо @username, либо ссылка tg://user?id=
     if message.from_user.username:
         username = f"@{message.from_user.username}"
     else:
-        user_id = message.from_user.id
         username = f"<a href='tg://user?id={user_id}'>Профиль</a>"
-    print(username)
+
     description = data['description']
-    media_id = data['media_id']
-    media_type = data['media_type']
+    media_id    = data['media_id']
+    media_type  = data['media_type']
+    location_text = (
+        f"{message.location.latitude}, {message.location.longitude}"
+        if message.location
+        else message.text
+    )
+
+    # 1) единственная вставка — и сразу получаем new_req_id
+    db = await get_db()
+    cursor = await db.execute(
+        """
+        INSERT INTO requests
+          (user_id, username, description, location,
+           media_id, media_type, status, master_id, commission_paid)
+        VALUES (?, ?, ?, ?, ?, ?, 'open', NULL, 0)
+        """,
+        (user_id, username, description, location_text, media_id, media_type)
+    )
+    new_req_id = cursor.lastrowid
+    await db.commit()
+    await db.close()
+    from app.bot import master_bot
+
+    # 2) рассылаем мастерам
+    masters = await list_available_masters()
+    for mid in masters:
+        await master_bot.send_message(
+            chat_id=mid,
+            text=(
+                f"🆕 Новая заявка №{new_req_id}!\n"
+                f"📍 Район: {location_text}\n"
+                f"🧾 Проблема: {description}"
+            ),
+            reply_markup=make_request_kb(new_req_id),
+            parse_mode="HTML"
+        )
+
+    # 3) подтверждаем клиенту
     finish_keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="📄 Мои заявки")],
             [KeyboardButton(text="📋 Новая заявка")]
-        ],
-        resize_keyboard=True
+        ], resize_keyboard=True
     )
 
-    if message.location:
-        location_text = f"{message.location.latitude}, {message.location.longitude}"
-    else:
-        location_text = message.text
 
-    await save_request(user_id, username, description, location_text, media_id, media_type)
     await message.answer("✅ Ваша заявка принята и отправлена мастерам!\n\n"
                             "🔎 <b>Что будет дальше:</b>\n"
                             "- Первый свободный мастер свяжется с вами напрямую через Telegram.\n"
