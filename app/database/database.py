@@ -18,17 +18,18 @@ async def init_db():
 
         # Таблица мастеров
         await db.execute("""
-            CREATE TABLE IF NOT EXISTS masters (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                telegram_id INTEGER UNIQUE,
-                username TEXT,
-                active_orders INTEGER DEFAULT 0,
-                has_debt BOOLEAN DEFAULT 0,
-                is_active BOOLEAN DEFAULT 1,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        """
-        )
+                    CREATE TABLE IF NOT EXISTS masters (
+                        id               INTEGER PRIMARY KEY AUTOINCREMENT,
+                        telegram_id      INTEGER UNIQUE,
+                        username         TEXT,
+                        full_name        TEXT,
+                        phone            TEXT,
+                        active_orders    INTEGER DEFAULT 0,
+                        has_debt         BOOLEAN DEFAULT 0,
+                        is_active        BOOLEAN DEFAULT 1,
+                        created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    )
+                """)
 
         # Таблица заявок с расширенной схемой
         await db.execute("""

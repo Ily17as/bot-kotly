@@ -42,17 +42,20 @@ async def list_users():
     await db.close()
     return rows
 
-async def add_master(telegram_id: int, username: str):
-    """Зарегистрировать нового мастера (или обновить существующего)."""
+async def add_master(telegram_id: int, username: str, full_name: str, phone: str):
+    """
+    Регистрирует или обновляет мастера с именем и телефоном.
+    """
     db = await get_db()
-    await db.execute(
-        """
-        INSERT INTO masters (telegram_id, username)
-        VALUES (?, ?)
-        ON CONFLICT(telegram_id) DO UPDATE SET username=excluded.username, is_active=1
-        """,
-        (telegram_id, username)
-    )
+    await db.execute("""
+        INSERT INTO masters (telegram_id, username, full_name, phone)
+        VALUES (?, ?, ?, ?)
+        ON CONFLICT(telegram_id) DO UPDATE SET
+            username   = excluded.username,
+            full_name  = excluded.full_name,
+            phone      = excluded.phone,
+            is_active  = 1
+    """, (telegram_id, username, full_name, phone))
     await db.commit()
     await db.close()
 
@@ -136,3 +139,32 @@ async def pay_commission(master_id: int):
     )
     await db.commit()
     await db.close()
+
+
+async def get_master_by_id(telegram_id: int):
+    """
+    Вернёт запись мастера:
+    (id, telegram_id, username, active_orders, has_debt, is_active, created_at)
+    или None, если нет такого.
+    """
+    db = await get_db()
+    async with db.execute(
+        "SELECT * FROM masters WHERE telegram_id = ?",
+        (telegram_id,)
+    ) as cursor:
+        row = await cursor.fetchone()
+    await db.close()
+    return row
+
+async def get_request_by_id(request_id: int):
+    """
+    Вернёт запись заявки (см. схему таблицы).
+    """
+    db = await get_db()
+    async with db.execute(
+        "SELECT * FROM requests WHERE id = ?",
+        (request_id,)
+    ) as cursor:
+        row = await cursor.fetchone()
+    await db.close()
+    return row
