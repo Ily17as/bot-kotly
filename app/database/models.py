@@ -84,7 +84,7 @@ async def list_available_masters():
     db = await get_db()
     async with db.execute(
         "SELECT telegram_id FROM masters "
-        "WHERE is_active=1 AND active_orders<2 AND has_debt=0"
+        "WHERE is_active=1 AND active_orders<2"
     ) as cursor:
         rows = await cursor.fetchall()
     await db.close()
@@ -168,3 +168,14 @@ async def get_request_by_id(request_id: int):
         row = await cursor.fetchone()
     await db.close()
     return row
+
+async def wait_client_confirmation(request_id: int, master_id: int):
+    """Помечаем заявку как ожидающую подтверждения клиента."""
+    db = await get_db()
+    await db.execute(
+        "UPDATE requests SET status='await_client' "
+        "WHERE id=? AND master_id=?",
+        (request_id, master_id),
+    )
+    await db.commit()
+    await db.close()

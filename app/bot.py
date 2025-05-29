@@ -15,6 +15,8 @@ from app.middlewares.error_handler import ErrorHandlerMiddleware
 from app.utils.logger import setup_logger
 from aiogram.client.bot import DefaultBotProperties
 
+from app.handlers.client_confirm import router as confirm_router
+
 # — общий логгер
 setup_logger()
 logger = logging.getLogger(__name__)
@@ -24,6 +26,7 @@ user_bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMod
 user_dp = Dispatcher()
 user_dp.include_router(client_router)
 user_dp.message.middleware(ErrorHandlerMiddleware())
+user_dp.include_router(confirm_router)
 
 # === Мастер-бот ===
 master_bot = Bot(token=MASTER_BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))

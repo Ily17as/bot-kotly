@@ -38,7 +38,7 @@ async def init_db():
                 user_id INTEGER,
                 username TEXT,
                 description TEXT,
-                settlement TEXT or NULL,
+                settlement TEXT,
                 location TEXT,
                 latitude     REAL,
                 longitude    REAL,
