@@ -16,6 +16,7 @@ from app.utils.logger import setup_logger
 from aiogram.client.bot import DefaultBotProperties
 
 from app.handlers.client_confirm import router as confirm_router
+from app.handlers import client_review
 
 # — общий логгер
 setup_logger()
@@ -33,6 +34,9 @@ master_bot = Bot(token=MASTER_BOT_TOKEN, default=DefaultBotProperties(parse_mode
 master_dp = Dispatcher()
 master_dp.include_router(master_router)
 master_dp.message.middleware(ErrorHandlerMiddleware())
+
+from app.handlers import client_review
+user_dp.include_router(client_review.router)
 
 # Экспорт, чтобы client_requests.py мог шлать мастерам
 __all__ = ["user_bot", "master_bot"]

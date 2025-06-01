@@ -179,3 +179,59 @@ async def wait_client_confirmation(request_id: int, master_id: int):
     )
     await db.commit()
     await db.close()
+
+
+async def add_review(request_id: int, master_id: int, client_id: int,
+                     rating: int, comment: str | None):
+    db = await get_db()
+    await db.execute(
+        "INSERT INTO reviews (request_id, master_id, client_id, rating, comment) "
+        "VALUES (?, ?, ?, ?, ?)",
+        (request_id, master_id, client_id, rating, comment),
+    )
+    # при желании обновим средний рейтинг мастера
+    await db.execute(
+        "UPDATE masters "
+        "SET rating = (SELECT AVG(rating) FROM reviews WHERE master_id = ?) "
+        "WHERE telegram_id = ?",
+        (master_id, master_id),
+    )
+    await db.commit()
+    await db.close()
+
+
+# ───── админы ─────────────────────────────────────────────
+async def add_admin(telegram_id: int):
+    db = await get_db()
+    await db.execute("INSERT OR IGNORE INTO admins (telegram_id) VALUES (?)",
+                     (telegram_id,))
+    await db.commit(); await db.close()
+
+async def is_admin(telegram_id: int) -> bool:
+    db = await get_db()
+    async with db.execute("SELECT 1 FROM admins WHERE telegram_id=?", (telegram_id,)) as c:
+        row = await c.fetchone()
+    await db.close()
+    return row is not None
+
+async def list_admins() -> list[int]:
+    db = await get_db()
+    async with db.execute("SELECT telegram_id FROM admins") as c:
+        rows = await c.fetchall()
+    await db.close()
+    return [r[0] for r in rows]
+
+async def block_master(telegram_id: int):
+    db = await get_db()
+    await db.execute("UPDATE masters SET is_active = 0 WHERE telegram_id=?", (telegram_id,))
+    await db.commit(); await db.close()
+
+async def list_all_requests(limit: int = 30):
+    db = await get_db()
+    async with db.execute(
+        "SELECT id, status, username, description, created_at "
+        "FROM requests ORDER BY created_at DESC LIMIT ?", (limit,)
+    ) as c:
+        rows = await c.fetchall()
+    await db.close()
+    return rows

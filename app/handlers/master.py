@@ -157,6 +157,17 @@ async def cb_take_request(query: CallbackQuery):
         parse_mode="HTML",
     )
 
+    master_user_name = master[2]  # full_name из таблицы masters
+    master_fullname = master[3]
+    master_number = master[4]
+    await user_bot.send_message(
+        client_id,
+        f"🔧 Ваша заявка №{request_id} принята в работу!\n"
+        f"Мастер {master_fullname}(@<b>{master_user_name}</b>) скоро свяжется с вами в Telegram."
+        f"\nИли можете позвонить мастеру сами: {master_number}",
+        parse_mode="HTML",
+    )
+
     # 2) геопин – только теперь
     if latitude is not None and longitude is not None:
         await query.bot.send_location(
@@ -164,6 +175,20 @@ async def cb_take_request(query: CallbackQuery):
             latitude=latitude,
             longitude=longitude,
         )
+
+    from app.database.models import list_active_masters
+
+    other_masters = await list_active_masters()
+    other_masters = [mid for mid in other_masters if mid != master_id]
+
+    for mid in other_masters:
+        try:
+            await query.bot.send_message(
+                mid,
+                f"🚫 Заявка №{request_id} уже принята другим мастером.",
+            )
+        except Exception as e:
+            logging.exception(f"Не смог уведомить мастера {mid}: {e}")
 
     # убираем кнопки у сообщения-уведомления в чате мастеров
     try:
@@ -238,3 +263,26 @@ async def cmd_pay_commission(message: Message):
 
     await pay_commission(master_id)
     await message.answer("💳 Комиссия оплачена, вы снова в очереди на заявки.")
+
+@router.callback_query(F.data == "pay")
+async def cb_pay_commission(query: CallbackQuery):
+    master_id = query.from_user.id
+
+    master = await get_master_by_id(master_id)
+    if not master or master[7] != 1:            # is_active
+        return await query.answer("⛔ Вы не зарегистрированы или заблокированы.", show_alert=True)
+
+    if master[6] == 0:                          # has_debt
+        return await query.answer("🟢 У вас нет задолженности.", show_alert=True)
+
+    # обнуляем долг
+    await pay_commission(master_id)
+
+    # убираем кнопку из сообщения
+    try:
+        await query.message.edit_reply_markup()
+    except Exception:
+        pass
+
+    await query.message.answer("✅ Комиссия оплачена. Вы снова получаете заявки.")
+    await query.answer("Спасибо!")

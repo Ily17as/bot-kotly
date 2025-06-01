@@ -16,6 +16,13 @@ def make_pay_kb() -> InlineKeyboardMarkup:
         ]
     )
 
+def make_rating_kb(request_id: int) -> InlineKeyboardMarkup:
+    # 5,4,3,2,1 → чтобы красивой дугой
+    buttons = [
+        InlineKeyboardButton(text=f"{i}/5", callback_data=f"rate:{request_id}:{i}")
+        for i in (5,4,3,2,1)
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=[buttons])
 
 @router.callback_query(lambda c: c.data and c.data.startswith("confirm:"))
 async def cb_client_confirm(query: CallbackQuery):
@@ -31,6 +38,11 @@ async def cb_client_confirm(query: CallbackQuery):
 
     await query.message.edit_reply_markup()
     await query.message.answer("✅ Спасибо! Заявка закрыта.")
+    await query.message.answer(
+        "🙌 Ваша оценка поможет улучшить сервис.\n"
+        "Насколько довольны работой мастера?",
+        reply_markup=make_rating_kb(request_id),
+    )
     await query.answer()
 
     try:

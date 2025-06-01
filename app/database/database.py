@@ -27,7 +27,8 @@ async def init_db():
                         active_orders    INTEGER DEFAULT 0,
                         has_debt         BOOLEAN DEFAULT 0,
                         is_active        BOOLEAN DEFAULT 1,
-                        created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                        created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        rating           REAL DEFAULT 0
                     )
                 """)
 
@@ -49,8 +50,19 @@ async def init_db():
                 commission_paid BOOLEAN DEFAULT 0,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
-        """
-        )
+        """)
+
+        await db.execute("""
+                    CREATE TABLE IF NOT EXISTS reviews (
+                        id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                        request_id  INTEGER,          -- по какой заявке
+                        master_id   INTEGER,
+                        client_id   INTEGER,
+                        rating      INTEGER,          -- 1-5
+                        comment     TEXT,             -- NULL, если клиент пропустил
+                        created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    )
+                """)
 
         await db.commit()
 
