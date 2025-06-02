@@ -1,3 +1,5 @@
+import asyncio
+
 from aiogram import Router, F
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.fsm.context import FSMContext
@@ -10,6 +12,9 @@ from app.handlers.master import make_request_kb
 from aiogram.types import BufferedInputFile
 from io import BytesIO
 import logging
+from app.database.models import list_admins
+from app.bots import master_bot
+from app.database.models import get_request_by_id
 
 router = Router()
 
@@ -64,6 +69,8 @@ async def process_district(message: Message, state: FSMContext):
                          "напишите адрес одной строкой",
                          parse_mode="Markdown")
 
+async def delayed_to_masters():
+    await asyncio.sleep(300)
 
 @router.message(RequestForm.location, F.location | F.text)
 async def process_location(message: Message, state: FSMContext):
@@ -128,6 +135,11 @@ async def process_location(message: Message, state: FSMContext):
                   f"📍 Район: {settlement}\n"
                   f"🧾 Проблема: {description}"
               )[:1024]
+    admin_txt = (
+                  f"(ADMIN)🆕 Новая заявка №{new_req_id}!\n"
+                  f"📍 Район: {settlement}\n"
+                  f"🧾 Проблема: {description}"
+              )[:1024]
 
     # ---------- качаем файл только один раз ----------
     buffer_bytes: bytes | None = None
@@ -141,7 +153,9 @@ async def process_location(message: Message, state: FSMContext):
     uploaded_file_id: str | None = None  # запомним file_id после первого аплоуда
     logging.info(f"Masters to notify: {masters}")
 
-    for mid in masters:
+    admin_ids = await list_admins()
+    # 1) сразу рассылаем админам
+    for aid in admin_ids:
         try:
             # 1️⃣  СНАЧАЛА медиа (если есть)
             if buffer_bytes:
@@ -153,18 +167,18 @@ async def process_location(message: Message, state: FSMContext):
                     )
                     if media_type == "photo":
                         msg = await master_bot.send_photo(
-                            mid,
+                            aid,
                             photo=buf,
-                            caption=msg_txt,
+                            caption=admin_txt,
                             reply_markup=make_request_kb(new_req_id),
                             parse_mode="HTML",
                         )
                         uploaded_file_id = msg.photo[-1].file_id
                     else:
                         msg = await master_bot.send_video(
-                            mid,
+                            aid,
                             video=buf,
-                            caption=msg_txt,
+                            caption=admin_txt,
                             reply_markup=make_request_kb(new_req_id),
                             parse_mode="HTML",
                         )
@@ -173,25 +187,25 @@ async def process_location(message: Message, state: FSMContext):
                     # ─ остальным мастерам – по file_id
                     if media_type == "photo":
                         await master_bot.send_photo(
-                            mid,
+                            aid,
                             photo=uploaded_file_id,
-                            caption=msg_txt,
+                            caption=admin_txt,
                             reply_markup=make_request_kb(new_req_id),
                             parse_mode="HTML",
                         )
                     else:
                         await master_bot.send_video(
-                            mid,
+                            aid,
                             video=uploaded_file_id,
-                            caption=msg_txt,
+                            caption=admin_txt,
                             reply_markup=make_request_kb(new_req_id),
                             parse_mode="HTML",
                         )
             else:
                 # если медиа нет – сразу текст
                 await master_bot.send_message(
-                    mid,
-                    msg_txt,
+                    aid,
+                    admin_txt,
                     reply_markup=make_request_kb(new_req_id),
                     parse_mode="HTML",
                 )
@@ -199,9 +213,9 @@ async def process_location(message: Message, state: FSMContext):
             logging.info(f"Masters to notify: {masters}")
 
         except Exception as e:
-            logging.exception(f"Не смог отправить заявку мастеру {mid}: {e}")
+            logging.exception(f"Не смог отправить заявку мастеру {aid}: {e}")
 
-    # ---------- ответ клиенту ----------
+
     finish_keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="📄 Мои заявки")],
@@ -221,6 +235,78 @@ async def process_location(message: Message, state: FSMContext):
         reply_markup=finish_keyboard,
         parse_mode="HTML",
     )
+
+    await asyncio.sleep(60)
+
+    other_masters = [
+        mid for mid in masters
+        if mid not in admin_ids
+    ]
+
+    req = await get_request_by_id(new_req_id)
+    if not req or req[10] != "open":
+        pass
+    else:
+        for mid in other_masters:
+            try:
+                # 1️⃣  СНАЧАЛА медиа (если есть)
+                if buffer_bytes:
+                    if uploaded_file_id is None:
+                        # ─ первая отправка – реальный аплоуд
+                        buf = BufferedInputFile(
+                            buffer_bytes,
+                            filename=f"attach.{'jpg' if media_type == 'photo' else 'mp4'}",
+                        )
+                        if media_type == "photo":
+                            msg = await master_bot.send_photo(
+                                mid,
+                                photo=buf,
+                                caption=msg_txt,
+                                reply_markup=make_request_kb(new_req_id),
+                                parse_mode="HTML",
+                            )
+                            uploaded_file_id = msg.photo[-1].file_id
+                        else:
+                            msg = await master_bot.send_video(
+                                mid,
+                                video=buf,
+                                caption=msg_txt,
+                                reply_markup=make_request_kb(new_req_id),
+                                parse_mode="HTML",
+                            )
+                            uploaded_file_id = msg.video.file_id
+                    else:
+                        # ─ остальным мастерам – по file_id
+                        if media_type == "photo":
+                            await master_bot.send_photo(
+                                mid,
+                                photo=uploaded_file_id,
+                                caption=msg_txt,
+                                reply_markup=make_request_kb(new_req_id),
+                                parse_mode="HTML",
+                            )
+                        else:
+                            await master_bot.send_video(
+                                mid,
+                                video=uploaded_file_id,
+                                caption=msg_txt,
+                                reply_markup=make_request_kb(new_req_id),
+                                parse_mode="HTML",
+                            )
+                else:
+                    # если медиа нет – сразу текст
+                    await master_bot.send_message(
+                        mid,
+                        msg_txt,
+                        reply_markup=make_request_kb(new_req_id),
+                        parse_mode="HTML",
+                    )
+
+                logging.info(f"Masters to notify: {masters}")
+
+            except Exception as e:
+                logging.exception(f"Не смог отправить заявку мастеру {mid}: {e}")
+
     await state.clear()
 
 

@@ -16,7 +16,9 @@ from app.utils.logger import setup_logger
 from aiogram.client.bot import DefaultBotProperties
 
 from app.handlers.client_confirm import router as confirm_router
+from app.handlers.admin_routes import router as admin_router
 from app.handlers import client_review
+
 
 # — общий логгер
 setup_logger()
@@ -35,7 +37,10 @@ master_dp = Dispatcher()
 master_dp.include_router(master_router)
 master_dp.message.middleware(ErrorHandlerMiddleware())
 
-from app.handlers import client_review
+# создаём и подключаем к master_dp
+master_dp.include_router(admin_router)
+
+
 user_dp.include_router(client_review.router)
 
 # Экспорт, чтобы client_requests.py мог шлать мастерам
@@ -88,6 +93,7 @@ async def debug_users():
     users = await list_users()
     for u in users:
         print(f"ID: {u[0]}, Username: {u[1]}")
+
 
 # Запуск обоих ботов
 async def main():

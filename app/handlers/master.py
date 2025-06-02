@@ -3,6 +3,9 @@ from aiogram.filters import Command, StateFilter
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
+import asyncio
+from datetime import datetime, timezone
+import time
 import logging
 from app.database.models import (
     add_master,
@@ -12,7 +15,9 @@ from app.database.models import (
     complete_request,
     pay_commission,
     get_master_by_id,
-    get_request_by_id, wait_client_confirmation,
+    get_request_by_id,
+    wait_client_confirmation,
+    list_admins
 )
 from app.bots import user_bot
 router = Router()
@@ -77,8 +82,7 @@ async def process_master_phone(message: Message, state: FSMContext):
 # inline-клавиатура для новых заявок
 def make_request_kb(request_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text="🔧 Взять в работу", callback_data=f"take:{request_id}"),
-        InlineKeyboardButton(text="❌ Отклонить",     callback_data=f"decline:{request_id}")
+        InlineKeyboardButton(text="🔧 Взять в работу", callback_data=f"take:{request_id}")
     ]])
 
 def make_done_kb(request_id: int) -> InlineKeyboardMarkup:
@@ -87,7 +91,8 @@ def make_done_kb(request_id: int) -> InlineKeyboardMarkup:
             [
                 InlineKeyboardButton(
                     text="✅ Завершить", callback_data=f"done:{request_id}"
-                )
+                ),
+                InlineKeyboardButton(text="❌ Отклонить", callback_data=f"decline:{request_id}")
             ]
         ]
     )
@@ -102,6 +107,26 @@ def make_client_confirm_kb(request_id: int) -> InlineKeyboardMarkup:
         ]
     )
 
+
+async def notify_others_later(delay: int, other_masters: list[int], request_id: int, bot):
+    """
+    Корутина ждёт `delay` секунд, а потом рассылает уведомление всем мастерам из other_masters.
+    Если delay == 0, сразу идёт к рассылке.
+    """
+    if delay > 0:
+        # заснуть на то количество секунд, которое осталось до 5 минут
+        await asyncio.sleep(delay)
+
+    # после пробуждения (или сразу, если delay=0) рассылаем сообщение
+    for mid in other_masters:
+        try:
+            # Важно: в параметрах send_message нужно писать text=<строка>, а не text: <строка>
+            await bot.send_message(
+                mid,
+                text=f"Заявка №{request_id} уже принята другим мастером."
+            )
+        except Exception as e:
+            logging.exception(f"Не смог уведомить мастера {mid}: {e}")
 
 # — «Взять в работу»
 @router.callback_query(lambda c: c.data and c.data.startswith("take:"))
@@ -179,13 +204,40 @@ async def cb_take_request(query: CallbackQuery):
     from app.database.models import list_active_masters
 
     other_masters = await list_active_masters()
-    other_masters = [mid for mid in other_masters if mid != master_id]
+    admin_ids = await list_admins()
+
+    # Если текущий master_id — админ, то просто ничего не рассылаем:
+    if master_id in admin_ids:
+        for aid in admin_ids:
+            if aid != master_id:
+                try:
+                    # Важно: в параметрах send_message нужно писать text=<строка>, а не text: <строка>
+                    await query.bot.send_message(
+                        aid,
+                        text=f"Заявка №{request_id} уже принята другим админом."
+                    )
+                except Exception as e:
+                    logging.exception(f"Не смог уведомить мастера {aid}: {e}")
+
+        # убираем кнопки у исходного сообщения и выходим
+        try:
+            await query.message.edit_reply_markup(reply_markup=None)
+        except Exception as e:
+            logging.exception(f"Не удалось убрать кнопки у заявки {request_id}: {e}")
+        return
+
+
+    other_masters = [
+        mid for mid in other_masters
+        if mid != master_id
+    ]
 
     for mid in other_masters:
         try:
+            # Важно: в параметрах send_message нужно писать text=<строка>, а не text: <строка>
             await query.bot.send_message(
                 mid,
-                f"🚫 Заявка №{request_id} уже принята другим мастером.",
+                text=f"Заявка №{request_id} уже принята другим мастером."
             )
         except Exception as e:
             logging.exception(f"Не смог уведомить мастера {mid}: {e}")

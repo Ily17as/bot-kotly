@@ -64,5 +64,11 @@ async def init_db():
                     )
                 """)
 
+        await db.execute("""
+                            CREATE TABLE IF NOT EXISTS admins(
+                                telegram_id INTEGER PRIMARY KEY
+                            )
+                        """)
+
         await db.commit()
 
