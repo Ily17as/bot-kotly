@@ -114,6 +114,11 @@ async def decline_request(request_id: int, master_id: int):
         "WHERE id=? AND master_id=?",
         (request_id, master_id)
     )
+    await db.execute(
+        "UPDATE masters SET active_orders=active_orders-1 "
+        "WHERE telegram_id=? AND active_orders>0",
+        (master_id,)
+    )
     await db.commit()
     await db.close()
 
@@ -224,6 +229,14 @@ async def list_admins() -> list[int]:
 async def block_master(telegram_id: int):
     db = await get_db()
     await db.execute("UPDATE masters SET is_active = 0 WHERE telegram_id=?", (telegram_id,))
+    await db.commit(); await db.close()
+
+async def unblock_master(telegram_id: int):
+    db = await get_db()
+    await db.execute(
+        "UPDATE masters SET is_active = 1 WHERE telegram_id=?",
+        (telegram_id,),
+    )
     await db.commit(); await db.close()
 
 async def list_all_requests(limit: int = 30):
