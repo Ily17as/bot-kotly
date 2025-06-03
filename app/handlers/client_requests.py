@@ -236,6 +236,10 @@ async def process_location(message: Message, state: FSMContext):
         parse_mode="HTML",
     )
 
+    # Завершаем FSM сразу после создания заявки, иначе пользователь
+    # не сможет начать новый диалог в течение минуты ожидания.
+    await state.clear()
+
     await asyncio.sleep(60)
 
     other_masters = [
