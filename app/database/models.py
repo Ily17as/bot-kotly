@@ -114,6 +114,11 @@ async def decline_request(request_id: int, master_id: int):
         "WHERE id=? AND master_id=?",
         (request_id, master_id)
     )
+    await db.execute(
+        "UPDATE masters SET active_orders=active_orders-1 "
+        "WHERE telegram_id=? AND active_orders>0",
+        (master_id,)
+    )
     await db.commit()
     await db.close()
 
