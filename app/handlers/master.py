@@ -38,6 +38,7 @@ async def master_start(message: Message):
         "Команды:\n"
         "/register_master — зарегистрироваться и получать заявки\n"
         "/unblock_master [telegram_id] — разблокировать мастера (адм.)\n"
+        "/close_request [id] — закрыть заявку (адм.)\n"
         "/help — показать это сообщение"
     )
 
