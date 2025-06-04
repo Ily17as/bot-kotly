@@ -16,10 +16,10 @@ from app.database.models import (
     pay_commission,
     get_master_by_id,
     get_request_by_id,
-    wait_client_confirmation,
     list_admins
 )
 from app.bots import user_bot
+from app.handlers.client_review import make_rating_kb
 from aiogram.types import BufferedInputFile
 from io import BytesIO
 router = Router()
@@ -384,21 +384,22 @@ async def cb_done_request(query: CallbackQuery):
     if not req or req[10] != "in_progress" or req[11] != master_id:
         return await query.answer("⛔ Эта заявка не у вас в работе.", show_alert=True)
 
-    # 1. переводим в await_client
-    await wait_client_confirmation(request_id, master_id)
+    # 1. сразу закрываем заявку
+    await complete_request(request_id, master_id)
 
     # 2. сообщаем МАСТЕРУ
-    await query.message.answer("⌛ Ожидаем подтверждения клиента.")
-    await query.message.edit_reply_markup()          # убираем кнопку
-    await query.answer("Запрос отправлен клиенту")
+    await query.message.answer(
+        "🎉 Заявка завершена. Не забудьте оплатить комиссию командой /pay_commission",
+    )
+    await query.message.edit_reply_markup()
+    await query.answer("Заявка закрыта")
 
-    # 3. сообщаем КЛИЕНТУ
+    # 3. просим КЛИЕНТА оценить работу
     client_id = req[1]
     await user_bot.send_message(
         client_id,
-        f"🔔 Мастер отметил, что работа по заявке №{request_id} выполнена.\n"
-        "Если всё в порядке, подтвердите завершение:",
-        reply_markup=make_client_confirm_kb(request_id),
+        f"🔔 Мастер завершил работу по заявке №{request_id}.",
+        reply_markup=make_rating_kb(request_id),
         parse_mode="HTML",
     )
 
