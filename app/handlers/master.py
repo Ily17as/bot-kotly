@@ -106,6 +106,22 @@ def make_master_menu(is_admin: bool) -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
 
 
+def make_master_menu(is_admin: bool) -> ReplyKeyboardMarkup:
+    """Создаёт меню мастера, добавляя админские кнопки при необходимости."""
+    keyboard = [
+        [KeyboardButton(text="📄 Мои заявки")],
+        [KeyboardButton(text="💳 Оплатить комиссию")],
+        [KeyboardButton(text="✅ Закрыть по номеру")],
+    ]
+    if is_admin:
+        keyboard.extend([
+            [KeyboardButton(text="🔒 Заблокировать мастера")],
+            [KeyboardButton(text="🔓 Разблокировать мастера")],
+            [KeyboardButton(text="📝 История заявок")],
+        ])
+    return ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
+
+
 class MasterRegistration(StatesGroup):
     full_name = State()
     phone = State()

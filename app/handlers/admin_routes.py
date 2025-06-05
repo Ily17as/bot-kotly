@@ -222,9 +222,15 @@ async def cmd_recent_reviews(message: Message):
     for r in rows:
         req_id, rating, comment, master_name = r
         comment = comment or "-"
-        lines.append(f"#{req_id} • {master_name} • {rating}★ • {comment[:40]}")
+        short_comment = comment[:40] + ("…" if len(comment) > 40 else "")
+        master_name = master_name or "-"
+        lines.append(
+            f"<b>#{req_id}</b> — {rating}★\n"
+            f"🔧 {master_name}\n"
+            f"💬 {short_comment}"
+        )
 
-    await message.answer("\n".join(lines), parse_mode="HTML")
+    await message.answer("\n\n".join(lines), parse_mode="HTML")
 
 
 # ────────────────── Кнопки меню ─────────────
