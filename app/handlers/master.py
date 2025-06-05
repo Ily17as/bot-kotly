@@ -110,7 +110,6 @@ async def master_start(message: Message):
         "/finish_request [id] — закрыть заявку по номеру\n"
         "/my_requests — мои активные заявки\n"
         "/help — показать это сообщение"
-        reply_markup=MASTER_MENU,
     )
     if admin:
         text += (
@@ -123,7 +122,9 @@ async def master_start(message: Message):
             "/logout_admin — выйти из режима администратора"
         )
 
-    await message.answer(text, reply_markup=make_master_menu(admin))
+        await message.answer(text, reply_markup=make_master_menu(admin))
+    else:
+        await message.answer(text, reply_markup=MASTER_MENU)
 
 
 @router.message(Command("help"))
