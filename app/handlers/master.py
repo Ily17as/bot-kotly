@@ -14,12 +14,15 @@ from app.database.models import (
     decline_request,
     complete_request,
     pay_commission,
+    list_master_requests,
     get_master_by_id,
     get_request_by_id,
-    wait_client_confirmation,
     list_admins
 )
 from app.bots import user_bot
+from app.handlers.client_review import make_rating_kb
+from aiogram.types import BufferedInputFile
+from io import BytesIO
 router = Router()
 
 
@@ -35,6 +38,9 @@ async def master_start(message: Message):
         "👋 Добро пожаловать в бот мастера!\n\n"
         "Команды:\n"
         "/register_master — зарегистрироваться и получать заявки\n"
+        "/unblock_master [telegram_id] — разблокировать мастера (адм.)\n"
+        "/close_request [id] — закрыть заявку (адм.)\n"
+        "/my_requests — мои активные заявки\n"
         "/help — показать это сообщение"
     )
 
@@ -127,6 +133,91 @@ async def notify_others_later(delay: int, other_masters: list[int], request_id: 
             )
         except Exception as e:
             logging.exception(f"Не смог уведомить мастера {mid}: {e}")
+
+
+async def resend_request_to_masters(request_id: int, bot, exclude: list[int] | None = None):
+    """Отправляет открытую заявку всем мастерам заново."""
+    req = await get_request_by_id(request_id)
+    if not req or req[10] != "open":
+        return
+
+    masters = await list_available_masters()
+    if exclude:
+        masters = [m for m in masters if m not in exclude]
+
+    description = req[3]
+    settlement = req[4]
+    media_id = req[8]
+    media_type = req[9]
+
+    msg_txt = (
+        f"🆕 Заявка №{request_id}!\n"
+        f"📍 Район: {settlement}\n"
+        f"🧾 Проблема: {description}"
+    )[:1024]
+
+    buffer_bytes: bytes | None = None
+    if media_id:
+        try:
+            file_info = await user_bot.get_file(media_id)
+            file_obj = await user_bot.download_file(file_info.file_path)
+            buffer_bytes = file_obj.getvalue() if isinstance(file_obj, BytesIO) else file_obj
+        except Exception as e:
+            logging.exception(f"Не смог скачать медиа по заявке {request_id}: {e}")
+
+    uploaded_file_id: str | None = None
+    for mid in masters:
+        try:
+            if buffer_bytes:
+                if uploaded_file_id is None:
+                    buf = BufferedInputFile(
+                        buffer_bytes,
+                        filename=f"attach.{'jpg' if media_type == 'photo' else 'mp4'}",
+                    )
+                    if media_type == "photo":
+                        msg = await bot.send_photo(
+                            mid,
+                            photo=buf,
+                            caption=msg_txt,
+                            reply_markup=make_request_kb(request_id),
+                            parse_mode="HTML",
+                        )
+                        uploaded_file_id = msg.photo[-1].file_id
+                    else:
+                        msg = await bot.send_video(
+                            mid,
+                            video=buf,
+                            caption=msg_txt,
+                            reply_markup=make_request_kb(request_id),
+                            parse_mode="HTML",
+                        )
+                        uploaded_file_id = msg.video.file_id
+                else:
+                    if media_type == "photo":
+                        await bot.send_photo(
+                            mid,
+                            photo=uploaded_file_id,
+                            caption=msg_txt,
+                            reply_markup=make_request_kb(request_id),
+                            parse_mode="HTML",
+                        )
+                    else:
+                        await bot.send_video(
+                            mid,
+                            video=uploaded_file_id,
+                            caption=msg_txt,
+                            reply_markup=make_request_kb(request_id),
+                            parse_mode="HTML",
+                        )
+            else:
+                await bot.send_message(
+                    mid,
+                    msg_txt,
+                    reply_markup=make_request_kb(request_id),
+                    parse_mode="HTML",
+                )
+        except Exception as e:
+            logging.exception(f"Не смог отправить заявку мастеру {mid}: {e}")
 
 # — «Взять в работу»
 @router.callback_query(lambda c: c.data and c.data.startswith("take:"))
@@ -265,6 +356,18 @@ async def cb_decline_request(query: CallbackQuery):
         return await query.answer("⛔ Нечего отклонять.", show_alert=True)
 
     await decline_request(request_id, master_id)
+    try:
+        await query.message.edit_reply_markup()
+    except Exception:
+        pass
+
+    client_id = req[1]
+    await user_bot.send_message(
+        client_id,
+        f"❌ Мастер отклонил заявку №{request_id}. Мы ищем другого специалиста.",
+    )
+
+    await resend_request_to_masters(request_id, query.bot, exclude=[master_id])
     await query.answer("❌ Вы отклонили заявку — она вновь открыта.", show_alert=True)
 
 
@@ -283,21 +386,22 @@ async def cb_done_request(query: CallbackQuery):
     if not req or req[10] != "in_progress" or req[11] != master_id:
         return await query.answer("⛔ Эта заявка не у вас в работе.", show_alert=True)
 
-    # 1. переводим в await_client
-    await wait_client_confirmation(request_id, master_id)
+    # 1. сразу закрываем заявку
+    await complete_request(request_id, master_id)
 
     # 2. сообщаем МАСТЕРУ
-    await query.message.answer("⌛ Ожидаем подтверждения клиента.")
-    await query.message.edit_reply_markup()          # убираем кнопку
-    await query.answer("Запрос отправлен клиенту")
+    await query.message.answer(
+        "🎉 Заявка завершена. Не забудьте оплатить комиссию командой /pay_commission",
+    )
+    await query.message.edit_reply_markup()
+    await query.answer("Заявка закрыта")
 
-    # 3. сообщаем КЛИЕНТУ
+    # 3. просим КЛИЕНТА оценить работу
     client_id = req[1]
     await user_bot.send_message(
         client_id,
-        f"🔔 Мастер отметил, что работа по заявке №{request_id} выполнена.\n"
-        "Если всё в порядке, подтвердите завершение:",
-        reply_markup=make_client_confirm_kb(request_id),
+        f"🔔 Мастер завершил работу по заявке №{request_id}.",
+        reply_markup=make_rating_kb(request_id),
         parse_mode="HTML",
     )
 
@@ -338,3 +442,29 @@ async def cb_pay_commission(query: CallbackQuery):
 
     await query.message.answer("✅ Комиссия оплачена. Вы снова получаете заявки.")
     await query.answer("Спасибо!")
+
+
+# ─────────────────── /my_requests ───
+@router.message(Command("my_requests"))
+async def cmd_my_requests(message: Message):
+    master_id = message.from_user.id
+
+    master = await get_master_by_id(master_id)
+    if not master or master[7] != 1:
+        return await message.answer("⛔ Вы не зарегистрированы или заблокированы.")
+
+    requests = await list_master_requests(master_id)
+
+    lines = [f"#{r[0]} — {r[1]}" for r in requests]
+    if lines:
+        text = "\n".join(lines)
+        text = "Ваши текущие заявки:\n" + text
+    else:
+        text = "У вас нет активных заявок."
+
+    if master[6] == 1:
+        text += "\n\n⚠️ Есть задолженность по комиссии. /pay_commission"
+    else:
+        text += "\n\n🟢 Задолженности по комиссии нет."
+
+    await message.answer(text)

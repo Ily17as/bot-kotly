@@ -7,8 +7,16 @@ from aiogram.types import Message
 
 import os
 from app.database.models import (
-    add_admin, is_admin, list_all_requests, block_master
+    add_admin,
+    is_admin,
+    list_all_requests,
+    block_master,
+    unblock_master,
+    get_request_by_id,
+    force_close_request,
 )
+from app.bots import user_bot, master_bot
+import logging
 
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD") or ""
 
@@ -26,6 +34,8 @@ ADMIN_HELP = (
     "Доступные команды:\n"
     "  • /all_requests [N] — последние N (по умолчанию 30) заявок\n"
     "  • /block_master [telegram_id] — заблокировать мастера\n"
+    "  • /unblock_master [telegram_id] — разблокировать мастера\n"
+    "  • /close_request [id] — закрыть заявку принудительно\n"
     "  • /logout_admin — выйти из режима администратора"
 )
 
@@ -91,3 +101,52 @@ async def cmd_block_master(message: Message):
         return await message.answer("Используйте:\n/block_master [telegram_id]")
     await block_master(int(parts[1]))
     await message.answer("🔒 Мастер заблокирован (is_active=0).")
+
+
+# ─────────────────── /unblock_master <id> ───
+@router.message(Command("unblock_master"))
+async def cmd_unblock_master(message: Message):
+    if not await is_admin(message.from_user.id):
+        return
+    parts = message.text.split(maxsplit=1)
+    if len(parts) != 2 or not parts[1].isdigit():
+        return await message.answer("Используйте:\n/unblock_master [telegram_id]")
+    await unblock_master(int(parts[1]))
+    await message.answer("🔓 Мастер разблокирован (is_active=1).")
+
+
+# ─────────────────── /close_request <id> ───
+@router.message(Command("close_request"))
+async def cmd_close_request(message: Message):
+    if not await is_admin(message.from_user.id):
+        return
+    parts = message.text.split(maxsplit=1)
+    if len(parts) != 2 or not parts[1].isdigit():
+        return await message.answer("Используйте:\n/close_request [id]")
+    req_id = int(parts[1])
+    req = await get_request_by_id(req_id)
+    if not req:
+        return await message.answer("Заявка не найдена.")
+
+    master_id = await force_close_request(req_id)
+    user_id = req[1]
+
+    try:
+        await user_bot.send_message(
+            user_id,
+            f"ℹ️ Ваша заявка №{req_id} закрыта администратором.",
+        )
+    except Exception as e:
+        logging.exception(f"Не смог уведомить клиента {user_id}: {e}")
+
+    if master_id:
+        try:
+            await master_bot.send_message(
+                master_id,
+                f"⚠️ Заявка №{req_id} закрыта администратором. "
+                "Оплатите комиссию командой /pay_commission",
+            )
+        except Exception as e:
+            logging.exception(f"Не смог уведомить мастера {master_id}: {e}")
+
+    await message.answer("✅ Заявка закрыта администратором.")
