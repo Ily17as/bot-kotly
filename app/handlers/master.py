@@ -31,6 +31,48 @@ from aiogram.types import BufferedInputFile
 from io import BytesIO
 router = Router()
 
+# Постоянное меню для мастера
+MASTER_MENU = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="📄 Мои заявки")],
+        [KeyboardButton(text="💳 Оплатить комиссию")],
+        [KeyboardButton(text="✅ Закрыть по номеру")],
+    ],
+    resize_keyboard=True,
+)
+
+
+def make_master_menu(is_admin: bool) -> ReplyKeyboardMarkup:
+    """Создаёт меню мастера, добавляя админские кнопки при необходимости."""
+    keyboard = [
+        [KeyboardButton(text="📄 Мои заявки")],
+        [KeyboardButton(text="💳 Оплатить комиссию")],
+        [KeyboardButton(text="✅ Закрыть по номеру")],
+    ]
+    if is_admin:
+        keyboard.extend([
+            [KeyboardButton(text="🔒 Заблокировать мастера")],
+            [KeyboardButton(text="🔓 Разблокировать мастера")],
+            [KeyboardButton(text="📝 История заявок")],
+        ])
+    return ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
+
+
+def make_master_menu(is_admin: bool) -> ReplyKeyboardMarkup:
+    """Создаёт меню мастера, добавляя админские кнопки при необходимости."""
+    keyboard = [
+        [KeyboardButton(text="📄 Мои заявки")],
+        [KeyboardButton(text="💳 Оплатить комиссию")],
+        [KeyboardButton(text="✅ Закрыть по номеру")],
+    ]
+    if is_admin:
+        keyboard.extend([
+            [KeyboardButton(text="🔒 Заблокировать мастера")],
+            [KeyboardButton(text="🔓 Разблокировать мастера")],
+            [KeyboardButton(text="📝 История заявок")],
+        ])
+    return ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
+
 
 def make_master_menu(is_admin: bool) -> ReplyKeyboardMarkup:
     """Создаёт меню мастера, добавляя админские кнопки при необходимости."""
@@ -68,6 +110,7 @@ async def master_start(message: Message):
         "/finish_request [id] — закрыть заявку по номеру\n"
         "/my_requests — мои активные заявки\n"
         "/help — показать это сообщение"
+        reply_markup=MASTER_MENU,
     )
     if admin:
         text += (
