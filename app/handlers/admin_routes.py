@@ -106,10 +106,18 @@ async def cmd_all_requests(message: Message):
     if not rows:
         return await message.answer("Заявок нет.")
 
-    txt = ["🗂 <b>Последние заявки</b>:"]
+    lines = ["🗂 <b>Последние заявки</b>:"]
     for r in rows:
-        txt.append(f"#{r[0]} • {r[1]} • {r[2]} • {r[3][:30]}… • {r[4][5:16]}")
-    await message.answer("\n".join(txt), parse_mode="HTML")
+        req_id, status, username, desc, created = r
+        created = created[5:16]
+        desc = desc[:40] + ("…" if len(desc) > 40 else "")
+        username = f"@{username}" if username else "-"
+        lines.append(
+            f"<b>#{req_id}</b> — {status} — {created}\n"
+            f"👤 {username}\n"
+            f"🧾 {desc}"
+        )
+    await message.answer("\n\n".join(lines), parse_mode="HTML")
 
 
 # ─────────────────── /block_master <id> ─────
