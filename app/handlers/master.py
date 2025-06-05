@@ -14,6 +14,7 @@ from app.database.models import (
     decline_request,
     complete_request,
     pay_commission,
+    list_master_requests,
     get_master_by_id,
     get_request_by_id,
     list_admins
@@ -39,6 +40,7 @@ async def master_start(message: Message):
         "/register_master — зарегистрироваться и получать заявки\n"
         "/unblock_master [telegram_id] — разблокировать мастера (адм.)\n"
         "/close_request [id] — закрыть заявку (адм.)\n"
+        "/my_requests — мои активные заявки\n"
         "/help — показать это сообщение"
     )
 
@@ -440,3 +442,29 @@ async def cb_pay_commission(query: CallbackQuery):
 
     await query.message.answer("✅ Комиссия оплачена. Вы снова получаете заявки.")
     await query.answer("Спасибо!")
+
+
+# ─────────────────── /my_requests ───
+@router.message(Command("my_requests"))
+async def cmd_my_requests(message: Message):
+    master_id = message.from_user.id
+
+    master = await get_master_by_id(master_id)
+    if not master or master[7] != 1:
+        return await message.answer("⛔ Вы не зарегистрированы или заблокированы.")
+
+    requests = await list_master_requests(master_id)
+
+    lines = [f"#{r[0]} — {r[1]}" for r in requests]
+    if lines:
+        text = "\n".join(lines)
+        text = "Ваши текущие заявки:\n" + text
+    else:
+        text = "У вас нет активных заявок."
+
+    if master[6] == 1:
+        text += "\n\n⚠️ Есть задолженность по комиссии. /pay_commission"
+    else:
+        text += "\n\n🟢 Задолженности по комиссии нет."
+
+    await message.answer(text)

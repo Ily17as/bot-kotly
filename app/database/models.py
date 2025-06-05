@@ -172,6 +172,21 @@ async def pay_commission(master_id: int):
     await db.close()
 
 
+async def list_master_requests(master_id: int):
+    """Вернуть все незакрытые заявки мастера."""
+    db = await get_db()
+    async with db.execute(
+        "SELECT id, status, description, created_at "
+        "FROM requests "
+        "WHERE master_id=? AND status!='done' "
+        "ORDER BY created_at DESC",
+        (master_id,),
+    ) as cursor:
+        rows = await cursor.fetchall()
+    await db.close()
+    return rows
+
+
 async def get_master_by_id(telegram_id: int):
     """
     Вернёт запись мастера:
