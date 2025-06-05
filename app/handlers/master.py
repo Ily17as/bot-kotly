@@ -37,6 +37,7 @@ MASTER_MENU = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(text="📄 Мои заявки")],
         [KeyboardButton(text="💳 Оплатить комиссию")],
+        [KeyboardButton(text="✅ Закрыть по номеру")],
     ],
     resize_keyboard=True,
 )
@@ -45,6 +46,10 @@ MASTER_MENU = ReplyKeyboardMarkup(
 class MasterRegistration(StatesGroup):
     full_name = State()
     phone = State()
+
+
+class CloseRequestFSM(StatesGroup):
+    request_id = State()
 
 
 # — /start и /help
@@ -56,6 +61,7 @@ async def master_start(message: Message):
         "/register_master — зарегистрироваться и получать заявки\n"
         "/unblock_master [telegram_id] — разблокировать мастера (адм.)\n"
         "/close_request [id] — закрыть заявку (адм.)\n"
+        "/finish_request [id] — закрыть заявку по номеру\n"
         "/my_requests — мои активные заявки\n"
         "/help — показать это сообщение",
         reply_markup=MASTER_MENU,
@@ -97,6 +103,8 @@ async def process_master_phone(message: Message, state: FSMContext):
         f"Ваши данные:\n"
         f"👤 Имя: {full_name}\n"
         f"📞 Телефон: {phone}\n\n"
+        "Теперь вы будете получать новые заявки.\n"
+        "Для закрытия заявки по номеру используйте /finish_request",
         "Теперь вы будете получать новые заявки.",
         reply_markup=MASTER_MENU,
     )
@@ -494,7 +502,53 @@ async def cmd_my_requests(message: Message):
     await message.answer(text)
 
 
+# ─────────────────── /finish_request ───
+@router.message(Command("finish_request"))
+async def cmd_finish_request(message: Message, state: FSMContext):
+    await state.set_state(CloseRequestFSM.request_id)
+    await message.answer("Введите номер заявки, которую нужно закрыть:")
+
+
+@router.message(StateFilter(CloseRequestFSM.request_id), F.text)
+async def process_finish_request(message: Message, state: FSMContext):
+    if not message.text.isdigit():
+        return await message.answer("Введите число — номер заявки.")
+
+    request_id = int(message.text)
+    master_id = message.from_user.id
+
+    master = await get_master_by_id(master_id)
+    if not master or master[7] != 1:
+        await state.clear()
+        return await message.answer("⛔ Вы не зарегистрированы или заблокированы.")
+
+    req = await get_request_by_id(request_id)
+    if not req or req[10] != "in_progress" or req[11] != master_id:
+        await state.clear()
+        return await message.answer("⛔ Заявка не у вас в работе.")
+
+    await complete_request(request_id, master_id)
+    await state.clear()
+    await message.answer(
+        "Заявка закрыта. Не забудьте оплатить комиссию командой /pay_commission."
+    )
+
+    client_id = req[1]
+    await user_bot.send_message(
+        client_id,
+        f"🔔 Мастер завершил работу по заявке №{request_id}.",
+        reply_markup=make_rating_kb(request_id),
+        parse_mode="HTML",
+    )
+
+
 # Кнопка «Мои заявки» в меню
 @router.message(F.text == "📄 Мои заявки")
 async def btn_my_requests(message: Message):
     await cmd_my_requests(message)
+
+
+# Кнопка «Закрыть по номеру» в меню
+@router.message(F.text == "✅ Закрыть по номеру")
+async def btn_finish_request_menu(message: Message, state: FSMContext):
+    await cmd_finish_request(message, state)
