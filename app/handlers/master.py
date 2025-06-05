@@ -105,6 +105,7 @@ async def process_master_phone(message: Message, state: FSMContext):
         f"📞 Телефон: {phone}\n\n"
         "Теперь вы будете получать новые заявки.\n"
         "Для закрытия заявки по номеру используйте /finish_request",
+        "Теперь вы будете получать новые заявки.",
         reply_markup=MASTER_MENU,
     )
     await state.clear()
