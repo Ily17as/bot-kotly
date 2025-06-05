@@ -126,8 +126,12 @@ async def process_location(message: Message, state: FSMContext):
     await db.commit()
     await db.close()
 
+    # Снимаем состояние до отправки сообщений, чтобы пользователь
+    # сразу мог выполнять другие действия и случайные сообщения
+    # не создавали дубликаты заявок.
+    await state.clear()
+
     # ---------- готовим рассылку ----------
-    from app.bot import master_bot
 
     masters = await list_available_masters()
     msg_txt = (
@@ -306,9 +310,6 @@ async def process_location(message: Message, state: FSMContext):
 
             except Exception as e:
                 logging.exception(f"Не смог отправить заявку мастеру {mid}: {e}")
-
-    await state.clear()
-
 
 # ---------------- валидаторы ----------------
 @router.message(RequestForm.description)
