@@ -289,3 +289,21 @@ async def list_all_requests(limit: int = 30):
         rows = await c.fetchall()
     await db.close()
     return rows
+
+
+async def list_recent_reviews(limit: int = 10):
+    """Вернуть последние отзывы с указанием мастера и заявки."""
+    db = await get_db()
+    async with db.execute(
+        """
+        SELECT reviews.request_id, reviews.rating, reviews.comment,
+               COALESCE(masters.full_name, '')
+        FROM reviews
+        LEFT JOIN masters ON reviews.master_id = masters.telegram_id
+        ORDER BY reviews.created_at DESC LIMIT ?
+        """,
+        (limit,),
+    ) as c:
+        rows = await c.fetchall()
+    await db.close()
+    return rows

@@ -43,6 +43,22 @@ MASTER_MENU = ReplyKeyboardMarkup(
 )
 
 
+def make_master_menu(is_admin: bool) -> ReplyKeyboardMarkup:
+    """Создаёт меню мастера, добавляя админские кнопки при необходимости."""
+    keyboard = [
+        [KeyboardButton(text="📄 Мои заявки")],
+        [KeyboardButton(text="💳 Оплатить комиссию")],
+        [KeyboardButton(text="✅ Закрыть по номеру")],
+    ]
+    if is_admin:
+        keyboard.extend([
+            [KeyboardButton(text="🔒 Заблокировать мастера")],
+            [KeyboardButton(text="🔓 Разблокировать мастера")],
+            [KeyboardButton(text="📝 История заявок")],
+        ])
+    return ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
+
+
 class MasterRegistration(StatesGroup):
     full_name = State()
     phone = State()
@@ -55,17 +71,28 @@ class CloseRequestFSM(StatesGroup):
 # — /start и /help
 @router.message(Command("start"))
 async def master_start(message: Message):
-    await message.answer(
+    admin = await is_admin(message.from_user.id)
+    text = (
         "👋 Добро пожаловать в бот мастера!\n\n"
         "Команды:\n"
         "/register_master — зарегистрироваться и получать заявки\n"
-        "/unblock_master [telegram_id] — разблокировать мастера (адм.)\n"
-        "/close_request [id] — закрыть заявку (адм.)\n"
         "/finish_request [id] — закрыть заявку по номеру\n"
         "/my_requests — мои активные заявки\n"
-        "/help — показать это сообщение",
+        "/help — показать это сообщение"
         reply_markup=MASTER_MENU,
     )
+    if admin:
+        text += (
+            "\n\nАдминские команды:\n"
+            "/all_requests [N] — последние N заявок\n"
+            "/block_master [telegram_id] — заблокировать мастера\n"
+            "/unblock_master [telegram_id] — разблокировать мастера\n"
+            "/close_request [id] — закрыть заявку принудительно\n"
+            "/recent_reviews — история 10 заявок с отзывами\n"
+            "/logout_admin — выйти из режима администратора"
+        )
+
+    await message.answer(text, reply_markup=make_master_menu(admin))
 
 
 @router.message(Command("help"))
@@ -98,6 +125,7 @@ async def process_master_phone(message: Message, state: FSMContext):
     # сохраняем в БД
     await add_master(user.id, username, full_name, phone)
 
+    is_admin_user = await is_admin(user.id)
     await message.answer(
         "✅ Мастер зарегистрирован!\n\n"
         f"Ваши данные:\n"
@@ -105,8 +133,7 @@ async def process_master_phone(message: Message, state: FSMContext):
         f"📞 Телефон: {phone}\n\n"
         "Теперь вы будете получать новые заявки.\n"
         "Для закрытия заявки по номеру используйте /finish_request",
-        "Теперь вы будете получать новые заявки.",
-        reply_markup=MASTER_MENU,
+        reply_markup=make_master_menu(is_admin_user),
     )
     await state.clear()
 
