@@ -132,7 +132,6 @@ async def process_location(message: Message, state: FSMContext):
     await state.clear()
 
     # ---------- готовим рассылку ----------
-    from app.bot import master_bot
 
     masters = await list_available_masters()
     msg_txt = (

@@ -11,8 +11,6 @@ from aiogram.types import (
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 import asyncio
-from datetime import datetime, timezone
-import time
 import logging
 from app.database.models import (
     add_master,
@@ -24,7 +22,8 @@ from app.database.models import (
     list_master_requests,
     get_master_by_id,
     get_request_by_id,
-    list_admins
+    list_admins,
+    is_admin,
 )
 from app.bots import user_bot
 from app.handlers.client_review import make_rating_kb
@@ -41,6 +40,22 @@ MASTER_MENU = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True,
 )
+
+
+def make_master_menu(is_admin: bool) -> ReplyKeyboardMarkup:
+    """Создаёт меню мастера, добавляя админские кнопки при необходимости."""
+    keyboard = [
+        [KeyboardButton(text="📄 Мои заявки")],
+        [KeyboardButton(text="💳 Оплатить комиссию")],
+        [KeyboardButton(text="✅ Закрыть по номеру")],
+    ]
+    if is_admin:
+        keyboard.extend([
+            [KeyboardButton(text="🔒 Заблокировать мастера")],
+            [KeyboardButton(text="🔓 Разблокировать мастера")],
+            [KeyboardButton(text="📝 История заявок")],
+        ])
+    return ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
 
 
 def make_master_menu(is_admin: bool) -> ReplyKeyboardMarkup:
