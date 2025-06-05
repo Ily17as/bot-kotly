@@ -161,6 +161,7 @@ async def unblock_master_enter_id(message: Message, state: FSMContext):
         return await message.answer("Введите число.")
     await unblock_master(int(message.text))
     await state.clear()
+    await message.answer("🔓 Мастер разблокирован (is_active=1).")
 
 
 # ─────────────────── /close_request <id> ───
