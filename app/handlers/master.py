@@ -1,6 +1,13 @@
 from aiogram import Router, F
 from aiogram.filters import Command, StateFilter
-from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import (
+    Message,
+    CallbackQuery,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+    ReplyKeyboardMarkup,
+    KeyboardButton,
+)
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 import asyncio
@@ -25,6 +32,15 @@ from aiogram.types import BufferedInputFile
 from io import BytesIO
 router = Router()
 
+# Постоянное меню для мастера
+MASTER_MENU = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="📄 Мои заявки")],
+        [KeyboardButton(text="💳 Оплатить комиссию")],
+    ],
+    resize_keyboard=True,
+)
+
 
 class MasterRegistration(StatesGroup):
     full_name = State()
@@ -41,7 +57,8 @@ async def master_start(message: Message):
         "/unblock_master [telegram_id] — разблокировать мастера (адм.)\n"
         "/close_request [id] — закрыть заявку (адм.)\n"
         "/my_requests — мои активные заявки\n"
-        "/help — показать это сообщение"
+        "/help — показать это сообщение",
+        reply_markup=MASTER_MENU,
     )
 
 
@@ -80,7 +97,8 @@ async def process_master_phone(message: Message, state: FSMContext):
         f"Ваши данные:\n"
         f"👤 Имя: {full_name}\n"
         f"📞 Телефон: {phone}\n\n"
-        "Теперь вы будете получать новые заявки."
+        "Теперь вы будете получать новые заявки.",
+        reply_markup=MASTER_MENU,
     )
     await state.clear()
 
@@ -420,6 +438,12 @@ async def cmd_pay_commission(message: Message):
     await pay_commission(master_id)
     await message.answer("💳 Комиссия оплачена, вы снова в очереди на заявки.")
 
+
+# Кнопка «Оплатить комиссию» в меню
+@router.message(F.text == "💳 Оплатить комиссию")
+async def btn_pay_commission(message: Message):
+    await cmd_pay_commission(message)
+
 @router.callback_query(F.data == "pay")
 async def cb_pay_commission(query: CallbackQuery):
     master_id = query.from_user.id
@@ -468,3 +492,9 @@ async def cmd_my_requests(message: Message):
         text += "\n\n🟢 Задолженности по комиссии нет."
 
     await message.answer(text)
+
+
+# Кнопка «Мои заявки» в меню
+@router.message(F.text == "📄 Мои заявки")
+async def btn_my_requests(message: Message):
+    await cmd_my_requests(message)
