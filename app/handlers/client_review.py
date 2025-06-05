@@ -41,6 +41,7 @@ async def cb_rate(query: CallbackQuery, state: FSMContext):
                             master_id=req[11],
                             rating=rating)
 
+    await query.message.edit_reply_markup()
     await query.message.answer(
         "✍️ Хотите добавить текстовый отзыв?\n"
         "Отправьте сообщение или нажмите «Пропустить ➡️».",
@@ -76,6 +77,7 @@ async def skip_comment(query: CallbackQuery, state: FSMContext):
         data["rating"],
         None,
     )
+    await query.message.edit_reply_markup()
     await query.message.answer("Спасибо! Оценка сохранена.")
     await state.clear()
     await query.answer()

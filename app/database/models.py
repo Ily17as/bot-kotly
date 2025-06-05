@@ -114,6 +114,11 @@ async def decline_request(request_id: int, master_id: int):
         "WHERE id=? AND master_id=?",
         (request_id, master_id)
     )
+    await db.execute(
+        "UPDATE masters SET active_orders=active_orders-1 "
+        "WHERE telegram_id=? AND active_orders>0",
+        (master_id,)
+    )
     await db.commit()
     await db.close()
 
@@ -131,6 +136,32 @@ async def complete_request(request_id: int, master_id: int):
     await db.commit()
     await db.close()
 
+async def force_close_request(request_id: int):
+    """Закрыть заявку администратором без подтверждения клиента."""
+    db = await get_db()
+    async with db.execute(
+        "SELECT master_id FROM requests WHERE id=?",
+        (request_id,),
+    ) as c:
+        row = await c.fetchone()
+    if row is None:
+        await db.close()
+        return None
+    master_id = row[0]
+    await db.execute(
+        "UPDATE requests SET status='done' WHERE id=?",
+        (request_id,),
+    )
+    if master_id is not None:
+        await db.execute(
+            "UPDATE masters SET active_orders=active_orders-1, has_debt=1 "
+            "WHERE telegram_id=? AND active_orders>0",
+            (master_id,),
+        )
+    await db.commit()
+    await db.close()
+    return master_id
+
 async def pay_commission(master_id: int):
     db = await get_db()
     await db.execute(
@@ -139,6 +170,21 @@ async def pay_commission(master_id: int):
     )
     await db.commit()
     await db.close()
+
+
+async def list_master_requests(master_id: int):
+    """Вернуть все незакрытые заявки мастера."""
+    db = await get_db()
+    async with db.execute(
+        "SELECT id, status, description, created_at "
+        "FROM requests "
+        "WHERE master_id=? AND status!='done' "
+        "ORDER BY created_at DESC",
+        (master_id,),
+    ) as cursor:
+        rows = await cursor.fetchall()
+    await db.close()
+    return rows
 
 
 async def get_master_by_id(telegram_id: int):
@@ -226,11 +272,37 @@ async def block_master(telegram_id: int):
     await db.execute("UPDATE masters SET is_active = 0 WHERE telegram_id=?", (telegram_id,))
     await db.commit(); await db.close()
 
+async def unblock_master(telegram_id: int):
+    db = await get_db()
+    await db.execute(
+        "UPDATE masters SET is_active = 1 WHERE telegram_id=?",
+        (telegram_id,),
+    )
+    await db.commit(); await db.close()
+
 async def list_all_requests(limit: int = 30):
     db = await get_db()
     async with db.execute(
         "SELECT id, status, username, description, created_at "
         "FROM requests ORDER BY created_at DESC LIMIT ?", (limit,)
+    ) as c:
+        rows = await c.fetchall()
+    await db.close()
+    return rows
+
+
+async def list_recent_reviews(limit: int = 10):
+    """Вернуть последние отзывы с указанием мастера и заявки."""
+    db = await get_db()
+    async with db.execute(
+        """
+        SELECT reviews.request_id, reviews.rating, reviews.comment,
+               COALESCE(masters.full_name, '')
+        FROM reviews
+        LEFT JOIN masters ON reviews.master_id = masters.telegram_id
+        ORDER BY reviews.created_at DESC LIMIT ?
+        """,
+        (limit,),
     ) as c:
         rows = await c.fetchall()
     await db.close()
